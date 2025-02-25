@@ -53,7 +53,7 @@ jobs:
       - name: Construir imagem Docker
         run: |
           docker build -f docker/Dockerfile -t tiagolinhares/my-node-app:${{ github.sha }} .
-          docker tag my-dockerhub-account/my-node-app:${{ github.sha }} tiagolinhares/my-node-app:latest
+          docker tag tiagolinhares/my-node-app:${{ github.sha }} tiagolinhares/my-node-app:latest
 
       - name: Logar no Docker Hub
         uses: docker/login-action@v2
@@ -68,7 +68,7 @@ jobs:
 
       - name: Atualizar manifesto com a nova imagem
         run: |
-          sed -i 's|image: my-dockerhub-account/my-node-app:.*|image: my-dockerhub-account/my-node-app:${{ github.sha }}|' k8s/deployments/my-node-app-deployment.yaml
+          sed -i 's|image: tiagolinhares/my-node-app:.*|image: tiagolinhares/my-node-app:${{ github.sha }}|' k8s/deployments/my-node-app-deployment.yaml
 
       - name: Commitar mudanças nos manifestos de Kubernetes no repo de infra
         uses: EndBug/add-and-commit@v7
