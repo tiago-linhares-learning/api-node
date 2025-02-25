@@ -84,8 +84,9 @@ jobs:
 
       - name: Criar uma tag no repositorio
         run: |
+          
           git tag v${{ env.VERSION }}-${{ github.sha }}
-          git push https://x-access-token:${{ secrets.MY_GITHUB_TOKEN }}@github.com/tiago-linhares-learning/api-node.git v${{ env.VERSION }}-${{ github.sha }}
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/tiago-linhares-learning/api-node.git v${{ env.VERSION }}-${{ github.sha }}
 
 
       - name: Criar um release no GitHub
