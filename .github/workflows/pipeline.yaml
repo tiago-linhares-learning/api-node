@@ -51,7 +51,7 @@ jobs:
 
       - name: Construir imagem Docker
         run: |
-          docker build -t my-dockerhub-account/my-node-app:${{ github.sha }} .
+          docker build -f docker/Dockerfile -t my-dockerhub-account/my-node-app:${{ github.sha }} .
           docker tag my-dockerhub-account/my-node-app:${{ github.sha }} my-dockerhub-account/my-node-app:latest
 
       - name: Logar no Docker Hub
