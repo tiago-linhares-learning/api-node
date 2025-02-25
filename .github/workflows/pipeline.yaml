@@ -82,13 +82,7 @@ jobs:
           VERSION=$(node -p "require('./package.json').version")
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
-      - name: Criar uma tag no repositorio
-        run: |
-          
-          git tag v${{ env.VERSION }}-${{ github.sha }}
-          git push https://x-access-token:${{ secrets.MY_GITHUB_TOKEN }}@github.com/tiago-linhares-learning/api-node.git v${{ env.VERSION }}-${{ github.sha }}
-
-
+      
       - name: Criar um release no GitHub
         id: create_release
         uses: actions/create-release@v1
