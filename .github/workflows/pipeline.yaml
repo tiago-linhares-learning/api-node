@@ -76,21 +76,21 @@ jobs:
         run: |
           
           git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/usuario/infra-node.git
-         cd infra-node
+          cd infra-node
 
     
-         sed -i 's|image: tiagolinhares/my-node-app:.*|image: tiagolinhares/my-node-app:${{ github.sha }}|' k8s/deployments/my-node-app-deployment.yaml
+          sed -i 's|image: tiagolinhares/my-node-app:.*|image: tiagolinhares/my-node-app:${{ github.sha }}|' k8s/deployments/my-node-app-deployment.yaml
     
    
-         git config --global user.name "GitHub Actions"
-         git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
 
    
-         git add k8s/deployments/my-node-app-deployment.yaml
-        git commit -m "Atualizando imagem Docker para o commit ${{ github.sha }}"
+          git add k8s/deployments/my-node-app-deployment.yaml
+          git commit -m "Atualizando imagem Docker para o commit ${{ github.sha }}"
 
     
-         git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/usuario/infra-node.git
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/usuario/infra-node.git
 
 
       - name: Push para o repositório de infraestrutura
