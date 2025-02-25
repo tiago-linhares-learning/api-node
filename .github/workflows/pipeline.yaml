@@ -75,7 +75,7 @@ jobs:
       - name: Atualizar o manifesto Kubernetes no repositório de infraestrutura
         run: |
           
-          git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/usuario/infra-node.git
+          git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/tiago-linhares-learning/infra-node.git
           cd infra-node
 
     
@@ -90,7 +90,7 @@ jobs:
           git commit -m "Atualizando imagem Docker para o commit ${{ github.sha }}"
 
     
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/usuario/infra-node.git
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/tiago-linhares-learning/infra-node.git
 
 
       - name: Push para o repositório de infraestrutura
