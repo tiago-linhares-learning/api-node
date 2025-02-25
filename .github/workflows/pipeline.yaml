@@ -69,7 +69,7 @@ jobs:
         run: |
           docker images
           docker push tiagolinhares/my-node-app:${{ github.sha }}
-          docker push mtiagolinhares/my-node-app:latest
+          docker push tiagolinhares/my-node-app:latest
 
       - name: Atualizar manifesto com a nova imagem
         run: |
