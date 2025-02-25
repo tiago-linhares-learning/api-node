@@ -76,15 +76,7 @@ jobs:
         run: |
           docker save -o my-node-app-${{ github.sha }}.tar tiagolinhares/my-node-app:${{ github.sha }}
 
-      - name: Fazer upload da imagem Docker como artefato
-        uses: softprops/action-gh-release@v1
-        with:
-          files: |
-            my-node-app-${{ github.sha }}.tar
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Criar um release no GitHub e armazenar artefatos
+      - name: Criar um release no GitHub
         id: create_release
         uses: actions/create-release@v1
         with:
@@ -93,5 +85,13 @@ jobs:
           body: "Release para o commit ${{ github.sha }}"
           draft: false
           prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Fazer upload da imagem Docker como artefato
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            my-node-app-${{ github.sha }}.tar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
