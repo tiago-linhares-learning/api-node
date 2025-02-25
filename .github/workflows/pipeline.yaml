@@ -63,6 +63,7 @@ jobs:
 
       - name: Enviar imagem para Docker Hub
         run: |
+          docker images
           docker push tiagolinhares/my-node-app:${{ github.sha }}
           docker push mtiagolinhares/my-node-app:latest
 
