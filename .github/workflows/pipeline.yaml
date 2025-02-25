@@ -9,7 +9,10 @@ on:
 jobs:
   setup-node:
     runs-on: self-hosted  
-
+    env:
+      ACTIONS_RUNNER_DEBUG: true  
+      ACTIONS_STEP_DEBUG: true  
+      ACTIONS_DEBUG: true  
     steps:
       - name: Instalar Docker
         run: |
@@ -88,7 +91,7 @@ jobs:
           
           git tag v${{ env.VERSION }}-${{ github.sha }}
           git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/tiago-linhares-learning/api-node.git v${{ env.VERSION }}-${{ github.sha }}
-
+          git fetch --tags
 
       - name: Criar um release no GitHub
         id: create_release
