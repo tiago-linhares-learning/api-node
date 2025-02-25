@@ -92,7 +92,7 @@ jobs:
           draft: false
           prerelease: false
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
 
       - name: Fazer upload da imagem Docker como artefato
         uses: softprops/action-gh-release@v1
@@ -100,4 +100,4 @@ jobs:
           files: |
             my-node-app-${{ github.sha }}.tar
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
