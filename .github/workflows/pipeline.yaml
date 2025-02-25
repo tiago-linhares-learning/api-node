@@ -72,26 +72,26 @@ jobs:
           docker push tiagolinhares/my-node-app:${{ github.sha }}
           docker push tiagolinhares/my-node-app:latest
 
-      - name: Atualizar o manifesto Kubernetes no repositório de infraestrutura
+      - name: Salvar imagem Docker como arquivo .tar
         run: |
-          
-          git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/tiago-linhares-learning/infra-node.git
-          cd infra-node
+          docker save -o my-node-app-${{ github.sha }}.tar tiagolinhares/my-node-app:${{ github.sha }}
 
-    
-          sed -i 's|image: tiagolinhares/my-node-app:.*|image: tiagolinhares/my-node-app:${{ github.sha }}|' k8s/deployments/my-node-app-deployment.yaml
-    
-   
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
+      - name: Fazer upload da imagem Docker como artefato
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            my-node-app-${{ github.sha }}.tar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-   
-          git add k8s/deployments/my-node-app-deployment.yaml
-          git commit -m "Atualizando imagem Docker para o commit ${{ github.sha }}"
-
-    
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/tiago-linhares-learning/infra-node.git
-
-
-      - name: Push para o repositório de infraestrutura
-        run: git push https://github.com/${{ secrets.GITHUB_TOKEN }}@github.com/usuario/repo-infra.git
+      - name: Criar um release no GitHub e armazenar artefatos
+        id: create_release
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ github.sha }}
+          release_name: Release ${{ github.sha }}
+          body: "Release para o commit ${{ github.sha }}"
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
