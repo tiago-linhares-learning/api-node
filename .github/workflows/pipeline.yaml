@@ -56,7 +56,7 @@ jobs:
     
       - name: Construir imagem Docker
         run: |
-          docker build -t docker/Dockerfile -t tiagolinhares/my-node-app:${{ github.sha }} .
+          docker build -f docker/Dockerfile -t tiagolinhares/my-node-app:${{ github.sha }} .
           docker tag tiagolinhares/my-node-app:${{ github.sha }} tiagolinhares/my-node-app:latest
 
       - name: Logar no Docker Hub
