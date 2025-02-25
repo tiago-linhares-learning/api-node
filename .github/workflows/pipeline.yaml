@@ -75,18 +75,23 @@ jobs:
       - name: Atualizar o manifesto Kubernetes no repositório de infraestrutura
         run: |
           
-          git clone https://github.com/usuario/infra-node.git
-          cd infra-node
+          git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/usuario/infra-node.git
+         cd infra-node
 
-         
-          sed -i 's|image: tiagolinhares/my-node-app:.*|image: tiagolinhares/my-node-app:${{ github.sha }}|' k8s/deployments/my-node-app-deployment.yaml
-          
-          # Fazer commit e push para o repositório infra-node
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
-          git add k8s/deployments/my-node-app-deployment.yaml
-          git commit -m "Atualizando imagem Docker para o commit ${{ github.sha }}"
-          git push https://github.com/${{ secrets.GITHUB_TOKEN }}@github.com/usuario/infra-node.git
+    
+         sed -i 's|image: tiagolinhares/my-node-app:.*|image: tiagolinhares/my-node-app:${{ github.sha }}|' k8s/deployments/my-node-app-deployment.yaml
+    
+   
+         git config --global user.name "GitHub Actions"
+         git config --global user.email "actions@github.com"
+
+   
+         git add k8s/deployments/my-node-app-deployment.yaml
+        git commit -m "Atualizando imagem Docker para o commit ${{ github.sha }}"
+
+    
+         git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/usuario/infra-node.git
+
 
       - name: Push para o repositório de infraestrutura
         run: git push https://github.com/${{ secrets.GITHUB_TOKEN }}@github.com/usuario/repo-infra.git
