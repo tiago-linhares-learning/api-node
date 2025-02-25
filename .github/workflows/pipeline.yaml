@@ -3,8 +3,9 @@ name: CI/CD Pipeline
 on:
   push:
     branches:
-      - main 
-  workflow_dispatch: 
+      - main
+  workflow_dispatch:
+
 jobs:
   setup-node:
     runs-on: self-hosted  
@@ -71,19 +72,21 @@ jobs:
           docker push tiagolinhares/my-node-app:${{ github.sha }}
           docker push tiagolinhares/my-node-app:latest
 
-      - name: Atualizar manifesto com a nova imagem
+      - name: Atualizar o manifesto Kubernetes no repositório de infraestrutura
         run: |
-          sed -i 's|image: tiagolinhares/my-node-app:.*|image: tiagolinhares/my-node-app:${{ github.sha }}|' k8s/deployments/my-node-app-deployment.yaml
+          
+          git clone https://github.com/usuario/infra-node.git
+          cd infra-node
 
-      - name: Commitar mudanças nos manifestos de Kubernetes no repo de infra
-        uses: EndBug/add-and-commit@v7
-        with:
-          author_name: 'GitHub Actions'
-          author_email: 'actions@github.com'
-          message: 'Atualizando imagem Docker nos manifestos de Kubernetes'
-          add: 'k8s/*'  
+         
+          sed -i 's|image: tiagolinhares/my-node-app:.*|image: tiagolinhares/my-node-app:${{ github.sha }}|' k8s/deployments/my-node-app-deployment.yaml
+          
+          # Fazer commit e push para o repositório infra-node
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add k8s/deployments/my-node-app-deployment.yaml
+          git commit -m "Atualizando imagem Docker para o commit ${{ github.sha }}"
+          git push https://github.com/${{ secrets.GITHUB_TOKEN }}@github.com/usuario/infra-node.git
 
       - name: Push para o repositório de infraestrutura
         run: git push https://github.com/${{ secrets.GITHUB_TOKEN }}@github.com/usuario/repo-infra.git
-
-  
