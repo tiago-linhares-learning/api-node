@@ -88,7 +88,6 @@ jobs:
 
       - name: Criar uma tag no repositorio
         run: |
-          
           git tag v${{ env.VERSION }}-${{ github.sha }}
           git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/tiago-linhares-learning/api-node.git v${{ env.VERSION }}-${{ github.sha }}
           git fetch --tags
@@ -113,3 +112,35 @@ jobs:
           tag_name: v${{ env.VERSION }}-${{ github.sha }}
         env:
           GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
+
+  deploy:
+    needs: build  # Este job só será executado se o job `build` for bem-sucedido
+    runs-on: self-hosted
+    steps:
+      - name: Configurar Helm
+        run: |
+          curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash  # Instala o Helm
+
+      - name: Gerar Manifestos Kubernetes com Helm
+        run: |
+          helm repo add my-repo https://charts.myrepo.com
+          helm repo update
+          helm template my-node-app ./path-to-your-helm-chart --set image.tag=${{ github.sha }} > k8s/deployments/my-node-app.yaml
+
+      - name: Commit e Push dos Manifestos no Repositório Infra
+        run: |
+          git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/tiago-linhares-learning/infra-node.git
+          cd infra-node
+          git checkout main  # ou a branch que você deseja
+          cp -r ../k8s ./  # Copia os manifestos gerados para o repositório de infraestrutura
+          git add .
+          git commit -m "Adicionando manifestos Kubernetes para my-node-app"
+          git push origin main  # ou a branch que você deseja
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Acionar ArgoCD para Deploy
+        run: |
+          # Aqui você pode usar o ArgoCD CLI para fazer o deploy diretamente, caso o ArgoCD já esteja configurado para monitorar o repositório.
+          argocd app sync my-node-app --auth-token ${{ secrets.ARGOCD_AUTH_TOKEN }}
+          argocd app wait my-node-app --sync
