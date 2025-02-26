@@ -117,6 +117,9 @@ jobs:
   generate-manifests:
     needs: build
     runs-on: self-hosted
+    environment:
+      name: deploy
+      url: https://github.com/tiago-linhares-learning/api-node
     steps:
       - name: Checkout do Repositório de Infraestrutura
         uses: actions/checkout@v2
