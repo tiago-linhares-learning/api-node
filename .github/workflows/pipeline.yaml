@@ -140,6 +140,7 @@ jobs:
 
       - name: Gerar manifestos do Kubernetes com Helm
         run: |
+          ls -R infra-repo
           mkdir -p infra-repo/k8s/deployments
           helm create my-node-app
           helm template my-node-app . --set image.tag=${{ github.sha }} > infra-repo/k8s/deployments/my-node-app.yaml
