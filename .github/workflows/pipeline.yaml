@@ -1,6 +1,18 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
 jobs:
   setup-node:
     runs-on: self-hosted  
+    env:
+      ACTIONS_RUNNER_DEBUG: true  
+      ACTIONS_STEP_DEBUG: true  
+      ACTIONS_DEBUG: true  
     steps:
       - name: Instalar Docker
         run: |
