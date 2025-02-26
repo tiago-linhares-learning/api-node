@@ -7,7 +7,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  setup-node:
+  Setup-Node:
     runs-on: self-hosted  
     env:
       ACTIONS_RUNNER_DEBUG: true  
@@ -140,7 +140,13 @@ jobs:
         run: |
           helm repo add bitnami https://charts.bitnami.com/bitnami
           helm repo update
-
+      
+      - name: Obter a versão do package.json
+        id: get_version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+    
       - name: Gerar manifestos do Kubernetes com Helm
         run: |
           ls -R infra-repo/charts/my-node-app
