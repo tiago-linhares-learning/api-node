@@ -153,8 +153,12 @@ jobs:
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
           git add .
-          git commit -m "Adicionando manifestos de deploy para a versão ${{ github.sha }}"
-          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/tiago-linhares-learning/infra-node.git
+          if [[ $(git diff --cached --shortstat) != "" ]]; then
+            git commit -m "Adicionando manifestos de deploy para a versão ${{ github.sha }}"
+            git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/tiago-linhares-learning/infra-node.git
+          else
+            echo "Nenhuma alteração encontrada, commit não realizado."
+          fi
 
       - name: Criar o aplicativo no ArgoCD
         run: |
