@@ -151,3 +151,4 @@ jobs:
           git add k8s/deployments/my-node-app.yaml
           git commit -m "Adicionando manifestos de deploy para a versão ${{ github.sha }}"
           git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/tiago-linhares-learning/infra-node.git
+          
