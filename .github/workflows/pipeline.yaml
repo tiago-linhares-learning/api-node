@@ -112,17 +112,40 @@ jobs:
           tag_name: v${{ env.VERSION }}-${{ github.sha }}
         env:
           GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
-deploy:
-    needs: generate-manifests
+  
+  generate-manifests:
+    needs: build
     runs-on: self-hosted
     steps:
-      - name: Login no ArgoCD
-        run: |
-          curl -sSL https://github.com/argoproj/argo-cd/releases/download/v2.0.0-rc2/argocd-linux-amd64 -o /usr/local/bin/argocd
-          chmod +x /usr/local/bin/argocd
-          argocd login http://82.25.79.79:31295 --username admin --password ${{ secrets.ARGOCD_PASSWORD }}
+      - name: Checkout do Repositório de Infraestrutura
+        uses: actions/checkout@v2
+        with:
+          repository: tiago-linhares-learning/infra-node
+          token: ${{ secrets.GITHUB_TOKEN }}
+          path: infra-repo
 
-      - name: Sincronizar Aplicativo no ArgoCD
+      - name: Instalar Helm
         run: |
-          argocd app sync my-app-name --revision v${{ env.VERSION }}-${{ github.sha }}
-          argocd app wait my-app-name --sync
+          curl -sSL https://get.helm.sh/helm-v3.8.0-linux-amd64.tar.gz -o helm.tar.gz
+          tar -zxvf helm.tar.gz
+          sudo mv linux-amd64/helm /usr/local/bin/helm
+          helm version  # Verifica se o Helm foi instalado corretamente
+
+      - name: Adicionar Repositório de Chart do Helm
+        run: |
+          helm repo add my-repo https://charts.myrepo.com
+          helm repo update
+
+      - name: Gerar manifestos do Kubernetes com Helm
+        run: |
+          mkdir -p infra-repo/k8s/deployments
+          helm template my-node-app ./charts/my-node-app --set image.tag=${{ github.sha }} > infra-repo/k8s/deployments/my-node-app.yaml
+
+      - name: Commitar os manifestos no repositório de infraestrutura
+        run: |
+          cd infra-repo
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          git add k8s/deployments/my-node-app.yaml
+          git commit -m "Adicionando manifestos de deploy para a versão ${{ github.sha }}"
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/tiago-linhares-learning/infra-node.git
