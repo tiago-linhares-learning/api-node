@@ -110,5 +110,6 @@ jobs:
         with:
           files: |
             my-node-app-${{ github.sha }}.tar
+            tag_name: v${{ env.VERSION }}-${{ github.sha }}
         env:
           GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
