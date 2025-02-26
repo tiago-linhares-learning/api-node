@@ -34,7 +34,7 @@ jobs:
           sudo apt-get install -y nodejs
           node -v  # Verifica a versão do Node.js
 
-  build:
+  Build:
     needs: setup-node  
     runs-on: self-hosted  
     permissions: write-all
@@ -96,7 +96,7 @@ jobs:
         id: create_release
         uses: actions/create-release@v1
         with:
-          tag_name: v${{ env.VERSION }}-${{ github.sha }}  # Usa a versão do package.json e o hash do commit
+          tag_name: v${{ env.VERSION }}-${{ github.sha }}  
           release_name: Release ${{ env.VERSION }}-${{ github.sha }}
           body: "Release para o commit ${{ github.sha }} e versão ${{ env.VERSION }}"
           draft: false
@@ -147,7 +147,7 @@ jobs:
 
           mkdir -p infra-repo/k8s/deployments
           
-          IMAGE_VERSION=${{ github.sha }}
+          IMAGE_VERSION="v${{ env.VERSION }}-${{ github.sha:0:7 }}
           sed -i "s/^version:.*$/version: $IMAGE_VERSION/" infra-repo/charts/my-node-app/Chart.yaml
 
           helm create my-node-app
