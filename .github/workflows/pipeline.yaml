@@ -112,39 +112,17 @@ jobs:
           tag_name: v${{ env.VERSION }}-${{ github.sha }}
         env:
           GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
-
-  deploy:
-    needs: build  # Este job só será executado se o job `build` for bem-sucedido
+deploy:
+    needs: generate-manifests
     runs-on: self-hosted
     steps:
-      - name: Configurar Helm
+      - name: Login no ArgoCD
         run: |
-          curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash  # Instala o Helm
+          curl -sSL https://github.com/argoproj/argo-cd/releases/download/v2.0.0-rc2/argocd-linux-amd64 -o /usr/local/bin/argocd
+          chmod +x /usr/local/bin/argocd
+          argocd login http://82.25.79.79:31295 --username admin --password ${{ secrets.ARGOCD_PASSWORD }}
 
-      - name: Adicionar repositório Bitnami ao Helm
+      - name: Sincronizar Aplicativo no ArgoCD
         run: |
-          helm repo add bitnami https://charts.bitnami.com/bitnami
-          helm repo update  # Atualiza o repositório
-
-      - name: Gerar Manifestos Kubernetes com Helm
-        run: |
-          mkdir -p k8s/deployments
-          helm template my-node-app bitnami/my-node-app --set image.tag=${{ github.sha }} > k8s/deployments/my-node-app.yaml
-
-      - name: Commit e Push dos Manifestos no Repositório Infra
-        run: |
-          git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/tiago-linhares-learning/infra-node.git
-          cd infra-node
-          git checkout main  # ou a branch que você deseja
-          cp -r ../k8s ./  # Copia os manifestos gerados para o repositório de infraestrutura
-          git add .
-          git commit -m "Adicionando manifestos Kubernetes para my-node-app"
-          git push origin main  # ou a branch que você deseja
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Acionar ArgoCD para Deploy
-        run: |
-          # Aqui você pode usar o ArgoCD CLI para fazer o deploy diretamente, caso o ArgoCD já esteja configurado para monitorar o repositório.
-          argocd app sync my-node-app --auth-token ${{ secrets.ARGOCD_AUTH_TOKEN }}
-          argocd app wait my-node-app --sync
+          argocd app sync my-app-name --revision v${{ env.VERSION }}-${{ github.sha }}
+          argocd app wait my-app-name --sync
