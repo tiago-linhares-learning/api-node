@@ -146,6 +146,10 @@ jobs:
           ls -R infra-repo/charts/my-node-app
 
           mkdir -p infra-repo/k8s/deployments
+          
+          IMAGE_VERSION=${{ github.sha }}
+          sed -i "s/^version:.*$/version: $IMAGE_VERSION/" infra-repo/charts/my-node-app/Chart.yaml
+
           helm create my-node-app
           helm template my-node-app ./infra-repo/charts/my-node-app --set image.tag=${{ github.sha }} > infra-repo/k8s/deployments/my-node-app.yaml
           cat infra-repo/k8s/deployments/my-node-app.yaml
