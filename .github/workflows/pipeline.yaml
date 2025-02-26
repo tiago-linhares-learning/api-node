@@ -156,3 +156,29 @@ jobs:
           git commit -m "Adicionando manifestos de deploy para a versão ${{ github.sha }}"
           git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/tiago-linhares-learning/infra-node.git
 
+      - name: Criar o aplicativo no ArgoCD
+        run: |
+          # Baixar o ArgoCD CLI
+          curl -sSL -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/download/v2.2.2/argocd-linux-amd64
+          chmod +x /usr/local/bin/argocd
+
+          # Login no ArgoCD usando um token
+          argocd login http://82.25.79.79:31295 --username admin --password ${{ secrets.ARGOCD_PASSWORD }} --insecure
+
+          # Criar o aplicativo no ArgoCD, apontando para o repositório e diretório onde os manifestos estão
+          argocd app create my-node-app \
+            --repo https://github.com/tiago-linhares-learning/infra-node.git \
+            --path k8s/deployments \
+            --dest-server https://kubernetes.default.svc \
+            --dest-namespace default \
+            --sync-policy automated  # Sincronização automática
+
+      - name: Sincronizar o aplicativo no ArgoCD
+        run: |
+          # Forçar a sincronização para aplicar o manifesto no cluster
+          argocd app sync my-node-app
+
+      # Passo para verificar se a aplicação foi sincronizada com sucesso
+      - name: Verificar o status do aplicativo no ArgoCD
+        run: |
+          argocd app wait my-node-app --health --timeout 600
