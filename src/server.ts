@@ -8,7 +8,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.get("/health", (req: Request, res: Response) => {
-  res.status(200).send("aplicação de teste act digital esta funcionando");
+  res.status(200).send("teste act digital esta funcionando");
 });
 
 // Inicia o servidor apenas se este módulo for executado diretamente
