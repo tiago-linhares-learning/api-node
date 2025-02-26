@@ -169,7 +169,7 @@ jobs:
           chmod +x /usr/local/bin/argocd
 
           # Login no ArgoCD usando um token
-          argocd login http://82.25.79.79:31295 --username admin --password ${{ secrets.ARGOCD_PASSWORD }} --insecure
+          argocd login 82.25.79.79:31295 --username admin --password ${{ secrets.ARGOCD_PASSWORD }} --insecure
 
           # Criar o aplicativo no ArgoCD, apontando para o repositório e diretório onde os manifestos estão
           argocd app create my-node-app \
