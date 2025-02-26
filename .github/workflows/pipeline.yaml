@@ -1,18 +1,6 @@
-name: CI/CD Pipeline
-
-on:
-  push:
-    branches:
-      - main
-  workflow_dispatch:
-
 jobs:
   setup-node:
     runs-on: self-hosted  
-    env:
-      ACTIONS_RUNNER_DEBUG: true  
-      ACTIONS_STEP_DEBUG: true  
-      ACTIONS_DEBUG: true  
     steps:
       - name: Instalar Docker
         run: |
@@ -121,11 +109,14 @@ jobs:
         run: |
           curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash  # Instala o Helm
 
+      - name: Adicionar repositório Bitnami ao Helm
+        run: |
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm repo update  # Atualiza o repositório
+
       - name: Gerar Manifestos Kubernetes com Helm
         run: |
-          helm repo add my-repo https://charts.myrepo.com
-          helm repo update
-          helm template my-node-app ./path-to-your-helm-chart --set image.tag=${{ github.sha }} > k8s/deployments/my-node-app.yaml
+          helm template my-node-app bitnami/my-node-app --set image.tag=${{ github.sha }} > k8s/deployments/my-node-app.yaml
 
       - name: Commit e Push dos Manifestos no Repositório Infra
         run: |
