@@ -151,7 +151,7 @@ jobs:
           cd infra-repo
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
-          git add infra-repo/*
+          git add .
           git commit -m "Adicionando manifestos de deploy para a versão ${{ github.sha }}"
           git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/tiago-linhares-learning/infra-node.git
 
