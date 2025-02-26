@@ -141,6 +141,7 @@ jobs:
       - name: Gerar manifestos do Kubernetes com Helm
         run: |
           mkdir -p infra-repo/k8s/deployments
+          helm create my-node-app
           helm template my-node-app . --set image.tag=${{ github.sha }} > infra-repo/k8s/deployments/my-node-app.yaml
 
       - name: Commitar os manifestos no repositório de infraestrutura
@@ -151,4 +152,4 @@ jobs:
           git add k8s/deployments/my-node-app.yaml
           git commit -m "Adicionando manifestos de deploy para a versão ${{ github.sha }}"
           git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/tiago-linhares-learning/infra-node.git
-          
+
