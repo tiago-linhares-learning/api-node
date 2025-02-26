@@ -128,6 +128,7 @@ jobs:
 
       - name: Gerar Manifestos Kubernetes com Helm
         run: |
+          mkdir -p k8s/deployments
           helm template my-node-app bitnami/my-node-app --set image.tag=${{ github.sha }} > k8s/deployments/my-node-app.yaml
 
       - name: Commit e Push dos Manifestos no Repositório Infra
