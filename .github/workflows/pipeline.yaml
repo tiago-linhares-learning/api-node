@@ -122,7 +122,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: tiago-linhares-learning/infra-node
-          token: ${{ secrets.MY_GITHUB_TOK }}
+          token: ${{ secrets.MY_GITHUB_TOKEN }}
           ref: main
           path: infra-repo
 
