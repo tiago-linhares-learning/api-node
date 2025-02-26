@@ -201,3 +201,5 @@ jobs:
       - name: Verificar o status do aplicativo no ArgoCD
         run: |
           argocd app wait my-node-app --health --timeout 600
+ 
+ 
