@@ -4,11 +4,11 @@ const app = express();
 const PORT = 8080;
 
 app.get("/", (req: Request, res: Response) => {
-  res.json({ message: "API funcionando!" });
+  res.json({ message: "aplicação de teste act digital esta funcionando!" });
 });
 
 app.get("/health", (req: Request, res: Response) => {
-  res.status(200).send("aplicação de teste act digital esta funcionando");
+  res.status(200).send("API Funcionando");
 });
 
 // Inicia o servidor apenas se este módulo for executado diretamente
