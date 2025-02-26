@@ -202,4 +202,3 @@ jobs:
         run: |
           argocd app wait my-node-app --health --timeout 600
  
- 
