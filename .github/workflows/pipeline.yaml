@@ -52,7 +52,7 @@ jobs:
       - name: Verificar se o arquivo sonar-project.properties existe
         uses: ./.github/workflows/reusable/valida_arquivo_sonar
         with:
-          path: 'sonar-project.properties'  # Caminho do arquivo a ser verificado
+          path: 'sonar-project.properties'  
 
 
       - name: Instalar dependências
@@ -149,7 +149,7 @@ jobs:
           token: ${{ secrets.MY_GITHUB_TOKEN }}
           ref: main
           path: infra-repo
-
+      
       - name: Instalar Helm
         run: |
           curl -sSL https://get.helm.sh/helm-v3.8.0-linux-amd64.tar.gz -o helm.tar.gz
@@ -167,11 +167,24 @@ jobs:
         run: |
           VERSION=$(node -p "require('./package.json').version")
           echo "VERSION=$VERSION" >> $GITHUB_ENV
-    
+      - name: Comparar arquivos e realizar ações
+        run: |
+          # Definir os caminhos dos arquivos
+          FILE1="./infra/infra.yaml"
+          FILE2="./infra-repo/charts/my-node-app/values.yaml"
+          
+          # Comparar os arquivos e verificar se são iguais
+          if cmp -s "$FILE1" "$FILE2"; then
+            echo "Os arquivos são iguais. Apagando $FILE1."
+            rm "$FILE1"  # Apaga o arquivo infra.yaml
+          else
+            echo "Os arquivos são diferentes. Apagando $FILE2 e renomeando $FILE1 para values.yaml."
+            rm "$FILE2"  # Apaga o arquivo values.yaml
+            mv "$FILE1" "$FILE2"  # Renomeia infra.yaml para values.yaml
+          fi
       - name: Gerar manifestos do Kubernetes com Helm
         run: |
-          ls -R infra-repo/charts/my-node-app
-
+          
           mkdir -p infra-repo/k8s/deployments
           
           IMAGE_VERSION="v${{ env.VERSION }}-${{ github.sha }}"
