@@ -1,9 +1,9 @@
 name: Deploy App + Infra
 
 on:
-  #push:
-   # branches:
-    #  - main
+  push:
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
@@ -55,10 +55,16 @@ jobs:
         run: |
           npm run build
     
-      - name: Limpar imagens Docker antigas
-        run: |
-          docker system prune -af 
-    
+      - name: Executar análise de código e Quality Gate no SonarQube
+        uses: SonarSource/sonarqube-scan-action@v4
+        with:
+          extraArgs: |
+            -Dsonar.qualitygate.wait=true
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+          SONAR_PROJECT_PROPERTIES: './sonar-project.properties'
+         
       - name: Construir imagem Docker
         run: |
           docker build -f docker/Dockerfile -t tiagolinhares/my-node-app:${{ github.sha }} .
