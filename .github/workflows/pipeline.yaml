@@ -46,8 +46,8 @@ jobs:
       - name: Instalar dependências e compilar TypeScript
         run: |
           cd .github/workflows/reusable/valida_arquivo_sonar
-          npm install  # Instala as dependências do projeto
-          npx tsc      # Compila o código TypeScript
+          npm install --save-dev @types/node
+          npm run build
 
       - name: Verificar se o arquivo sonar-project.properties existe
         uses: ./.github/workflows/reusable/valida_arquivo_sonar
