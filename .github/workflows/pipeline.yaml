@@ -42,6 +42,18 @@ jobs:
     steps:
       - name: Checkout código
         uses: actions/checkout@v2
+      
+      - name: Instalar dependências e compilar TypeScript
+        run: |
+          cd .github/reusable/valida_arquivo_sonar
+          npm install  # Instala as dependências do projeto
+          npx tsc      # Compila o código TypeScript
+
+      - name: Verificar se o arquivo sonar-project.properties existe
+        uses: ./.github/reusable/valida_arquivo_sonar
+        with:
+          path: 'sonar-project.properties'  # Caminho do arquivo a ser verificado
+
 
       - name: Instalar dependências
         run: |
@@ -57,7 +69,7 @@ jobs:
 
       - name: Install unzip
         run: sudo apt-get update && sudo apt-get install -y unzip
-        
+
       - name: Executar análise de código e Quality Gate no SonarQube
         uses: SonarSource/sonarqube-scan-action@v4
         with:

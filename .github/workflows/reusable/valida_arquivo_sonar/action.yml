@@ -1,0 +1,10 @@
+name: 'Valida Arquivo Sonar'
+description: 'Verifica se o arquivo sonar-project.properties existe no repositório.'
+inputs:
+  path:
+    description: 'Caminho do arquivo a ser verificado.'
+    required: true
+    default: 'sonar-project.properties'
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
