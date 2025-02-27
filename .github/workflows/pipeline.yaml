@@ -54,7 +54,10 @@ jobs:
       - name: Construir a aplicação
         run: |
           npm run build
-    
+
+      - name: Install unzip
+        run: sudo apt-get update && sudo apt-get install -y unzip
+        
       - name: Executar análise de código e Quality Gate no SonarQube
         uses: SonarSource/sonarqube-scan-action@v4
         with:
