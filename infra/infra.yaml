@@ -9,11 +9,11 @@ service:
   type: NodePort
   port: 8080
   targetPort: 8080
-  nodePort: 30080  # Adicionando NodePort explicitamente
+  nodePort: 30080  
 
 resources: {}
 
-# Probes (se necessário para monitoramento de saúde da aplicação)
+
 livenessProbe:
   httpGet:
     path: /health

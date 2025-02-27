@@ -32,7 +32,7 @@ jobs:
         run: |
           curl -sL https://deb.nodesource.com/setup_22.x | sudo -E bash -
           sudo apt-get install -y nodejs
-          node -v  # Verifica a versão do Node.js
+          node -v 
 
   Build:
     needs: setup-node  
@@ -155,7 +155,7 @@ jobs:
           curl -sSL https://get.helm.sh/helm-v3.8.0-linux-amd64.tar.gz -o helm.tar.gz
           tar -zxvf helm.tar.gz
           sudo mv linux-amd64/helm /usr/local/bin/helm
-          helm version  # Verifica se o Helm foi instalado corretamente
+          helm version  
 
       - name: Adicionar Repositório de Chart do Helm
         run: |
@@ -177,10 +177,10 @@ jobs:
           # Comparar os arquivos e verificar se são iguais
           if cmp -s "$FILE1" "$FILE2"; then
             echo "Os arquivos são iguais. Apagando $FILE1."
-            rm "$FILE1"  # Apaga o arquivo infra.yaml
+            rm "$FILE1" 
           else
             echo "Os arquivos são diferentes. Apagando $FILE2 e renomeando $FILE1 para values.yaml."
-            rm "$FILE2"  # Apaga o arquivo values.yaml
+            rm "$FILE2"  
             mv "$FILE1" "$FILE2"  # Renomeia infra.yaml para values.yaml
           fi
       - name: Gerar manifestos do Kubernetes com Helm
@@ -234,7 +234,6 @@ jobs:
           # Forçar a sincronização para aplicar o manifesto no cluster
           argocd app sync my-node-app
 
-      # Passo para verificar se a aplicação foi sincronizada com sucesso
       - name: Verificar o status do aplicativo no ArgoCD
         run: |
           argocd app wait my-node-app --health --timeout 600
