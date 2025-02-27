@@ -126,7 +126,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.MY_GITHUB_TOKEN }}
 
       - name: Fazer upload da imagem Docker como artefato
-        if: ${{ env.UPLOAD_RELEASE == 'TRUE' }}
+        
         uses: softprops/action-gh-release@v1
         with:
           files: |
@@ -167,7 +167,8 @@ jobs:
         run: |
           VERSION=$(node -p "require('./package.json').version")
           echo "VERSION=$VERSION" >> $GITHUB_ENV
-      - name: Comparar arquivos e realizar ações
+
+      - name: Define arquivo infra
         run: |
           # Definir os caminhos dos arquivos
           FILE1="./infra/infra.yaml"
