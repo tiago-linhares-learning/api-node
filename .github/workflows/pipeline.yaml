@@ -154,6 +154,8 @@ jobs:
           mkdir -p infra-repo/k8s/deployments
           
           IMAGE_VERSION="v${{ env.VERSION }}-${{ github.sha }}"
+          echo "IMAGE_VERSION=$IMAGE_VERSION" >> $GITHUB_ENV
+          
           sed -i "s/^version:.*$/version: $IMAGE_VERSION/" infra-repo/charts/my-node-app/Chart.yaml
 
           helm create my-node-app
