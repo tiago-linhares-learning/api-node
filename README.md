@@ -12,6 +12,8 @@ A parte de **CD** está configurada no **ArgoCD** e pode ser acessada através d
 
 [ArgoCD - Acesso via IP](http://82.25.79.79:31295)
 
+- **usr:** admin
+- **pwd:** 2K-IZkZ80UEpYBmR
 
 A aplicação pode ser acessada através dos endereços abaixo
 
@@ -20,8 +22,7 @@ http://82.25.79.79:30080
 http://82.25.79.79:30080/health
 
 
-- **usr:** admin
-- **pwd:** 2K-IZkZ80UEpYBmR
+
 
 > **Nota:** O acesso ao ArgoCD está sendo feito via IP devido a problemas na configuração do Ingress do servidor.
 
